@@ -28,6 +28,20 @@
 \useoutertheme{default}
 \usecolortheme[RGB={176,112,23}]{structure}
 
+% --- Numeración de slides estilo n/N (slide actual / total) ---
+% Se coloca junto a los símbolos de navegación.
+% \inserttotalframenumber requiere DOS compilaciones para fijar el total.
+\setbeamertemplate{navigation symbols}{%
+    {\usebeamercolor[fg]{navigation symbols}%
+     \tiny\insertframenumber/\inserttotalframenumber}\kern1em
+    \insertslidenavigationsymbol
+    \insertframenavigationsymbol
+    \insertsubsectionnavigationsymbol
+    \insertsectionnavigationsymbol
+    \insertdocnavigationsymbol
+    \insertbackfindforwardnavigationsymbol
+}
+
 % =====================================================================
 %  NOTAS DEL ORADOR
 %  Las \note{} NO se ven en la presentación proyectada por defecto.
@@ -58,10 +72,13 @@
 %  ACTO 1 — EL MUNDO Y EL PROBLEMA
 % =====================================================================
 
-% --- Lámina 1: Portada ---
-\begin{frame}
+% --- Lámina 1: Portada (sin numeración) ---
+{
+\setbeamertemplate{navigation symbols}{}
+\begin{frame}[plain]
     \titlepage
 \end{frame}
+}
 \note{
 IDEA CENTRAL: Abrir el hilo rojo. No leer el título.
 
@@ -117,14 +134,53 @@ IMAGEN SUGERIDA (opcional): logo del CENACE.
 
 % --- Lámina 4: El proyecto (el corazón) ---
 \begin{frame}{Problema}
-    Cuando algo falla, alguien levanta un \textbf{ticket}. Un ingeniero clasifica el ticket y lo
-    resuelve consultando manuales, contratos, normas y su propia experiencia.
+\vfill
+\begin{center}
+\resizebox{\textwidth}{!}{%
+\begin{tikzpicture}[
+    font=\sffamily\small,
+    >={Stealth[length=2.5mm]},
+    paso/.style={
+        draw=structure.fg, rounded corners=3pt, align=center,
+        minimum height=2.3cm, minimum width=2.4cm, inner sep=6pt,
+        fill=structure.fg!8, very thick, text=black
+    },
+    final/.style={
+        draw=structure.fg, rounded corners=3pt, align=center,
+        minimum height=2.3cm, minimum width=2.4cm, inner sep=6pt,
+        fill=structure.fg, text=white, very thick
+    },
+    flecha/.style={->, very thick, draw=structure.fg},
+    etiqueta/.style={font=\sffamily\scriptsize\itshape, text=gray}
+]
 
-    \bigskip
-    Además, se nos comentó que existe una \textbf{base de conocimientos} con las
-    soluciones previas a problemas pasados.
+\node[paso] (user)
+    {\textcolor{structure.fg}{\Large\faUser}\\[5pt]\textbf{Usuario}\\\scriptsize reporta una falla};
+\node[paso, right=1.7cm of user] (ticket)
+    {\textcolor{structure.fg}{\Large\faClipboardList}\\[5pt]\textbf{Ticket}\\\scriptsize se levanta en el sistema GLPI};
+\node[paso, right=1.7cm of ticket] (tic)
+    {\textcolor{structure.fg}{\Large\faUserCog}\\[5pt]\textbf{TIC}\\\scriptsize clasifica el ticket};
+\node[draw=structure.fg, cylinder, shape border rotate=90, aspect=0.28,
+      fill=structure.fg!10, very thick, minimum height=2.0cm, minimum width=2.5cm,
+      align=center, text=black, right=1.7cm of tic] (kb)
+    {\textcolor{structure.fg}{\large\faDatabase}\\[4pt]\textbf{Base de}\\\textbf{conocimientos}};
+\node[final, right=1.7cm of kb] (sol)
+    {{\Large\faCheckCircle}\\[5pt]\textbf{Solución}};
 
+\draw[flecha] (user)   -- node[etiqueta, above]{levanta}   (ticket);
+\draw[flecha] (ticket) -- node[etiqueta, above]{se carga}  (tic);
+\draw[flecha] (tic)    -- node[etiqueta, above]{consulta}  (kb);
+\draw[flecha] (kb)     -- node[etiqueta, above]{resuelve}  (sol);
 
+\end{tikzpicture}%
+}
+\end{center}
+
+\vspace{1.5em}
+{\small Para resolver, el ingeniero se apoya en manuales, contratos, normas y su
+propia experiencia, además de una \textbf{base de conocimientos} con soluciones
+previas a problemas pasados.}
+\vfill
 \end{frame}
 \note{
 IDEA CENTRAL: ESTA es la lámina más importante. Plantar la tensión.
@@ -201,7 +257,7 @@ tenía dos patas, y eso prepara el giro del Acto 3.
 \end{frame}
 
 \begin{frame}{Obtención de más datos}
-    El segundo intento (236 registros) tuvo el mismo problema, así que
+    El \textbf{segundo intento} (236 registros) tuvo el \textbf{mismo problema}, así que
     tomamos una decisión: \textbf{ir presencialmente a extraer datos}.
 
     \bigskip
@@ -225,37 +281,41 @@ base de conocimientos quizá no existía como creíamos."
 [Contesta: CON QUÉ MEDIOS (con qué empecé) + refuerza el POR QUÉ.]
 }
 
-\begin{frame}{Detalles}
-    Se intentó codificar la gran mayoría de datos sensibles, sin embargo \textbf{no toda la información pudo ser codificada}.
-
-    \bigskip
-    Esto debido a que \textbf{las herramientas} utilizadas \textbf{no pudieron encontrar los patrones} para ciertos nombres, entidades, correos y teléfonos, debido a detalles de redacción.
-\end{frame}
-
-
-
 \begin{frame}{Anonimizar: antes y después}
     \begin{columns}[t]
         \begin{column}{0.48\textwidth}
             \textbf{Antes (como llega)}
             \medskip
 
-            \small
-            \flqq Buenos dias !! , favor de atender \textcolor{red!65!black}{Bundle - ABC} Gracias De: \textcolor{red!65!black}{Nombre} \textcolor{red!65!black}{nombre.apellido@correo.com}\frqq
+            \flqq Buenos dias !! , favor de atender Bundle - \textcolor{red!65!black}{PRO} Gracias De: \textcolor{red!65!black}{Angel} \textcolor{red!65!black}{angel.merino@cenace.com}\frqq
         
         \end{column}
         \begin{column}{0.48\textwidth}
             \textbf{Después (anonimizado)}
             \medskip
 
-            \small
-            \flqq Buenos dias !! , favor de atender \textcolor{red!65!black}{Bundle -} \textcolor{orange!80!black}{906ebd168f8da41239f9cc1e9a0541e7} Gracias De: \textcolor{orange!80!black}{fa6e2ab4c4fdac54356e0c937597d685}\frqq
+            \flqq Buenos dias !! , favor de atender Bundle - \textcolor{orange!80!black}{906ebd168f\dots} Gracias De: \textcolor{orange!80!black}{fa6e2ab4c4f\dots}\frqq
 
         \end{column}
     \end{columns}
-    \vspace{1.5em}
-    {\footnotesize Aun borrando los datos directos, a veces el contexto identifica: un rol
-    poco común junto con una fecha y un área pueden señalar a una sola persona.}
+\end{frame}
+
+\begin{frame}{Detalles}
+    El proceso de anonimización no fue sencillo, censurar toda la información provocaba \textbf{perder el contexto} y \textbf{quedarnos con palabras vacías}.
+    \medskip
+
+    \textbf{Título}
+    \smallskip
+    
+    \flqq Revisión DE \textcolor{orange!80!black}{3ba0f40775\dots}\frqq
+    \smallskip
+
+    \textbf{Descripción}
+    \smallskip
+    
+    \flqq LA \textcolor{orange!80!black}{033bd94b11\dots} EN \textcolor{orange!80!black}{3ba0f40775\dots} PARA \textcolor{orange!80!black}{8fc0181bbf\dots}\frqq
+
+
 \end{frame}
 
 \begin{frame}{\textquestiondown Cómo se ve una solución registrada?}
@@ -264,7 +324,10 @@ base de conocimientos quizá no existía como creíamos."
         correcto archivos de texto provenientes de reportes generados en SIRH.\frqq
     \end{quote}
     \vspace{1em}
-    {\small Categoría: \textit{Intranet y soporte de aplicaciones} - 21 palabras}
+    {\small Podemos ver \textbf{qué se hizo}, pero \textbf{no} se menciona el \textbf{cómo se hizo}.}
+    \medskip
+
+    {\small \textbf{Categoría}: \textit{Intranet y soporte de aplicaciones} - 21 palabras}
 \end{frame}
 \note{
 Ejemplo concreto de una solución registrada de longitud cercana al promedio.
@@ -279,8 +342,7 @@ a la siguiente lámina, donde se muestra qué porcentaje de tickets sí tiene un
         \centering
         \includegraphics[width=0.85\linewidth]{cantidad de palabras solucion.png}
     \end{figure}
-    {\small El análisis exploratorio reveló que menos de la mitad de los tickets traían
-    solución escrita. Esto pesó en las decisiones que vinieron después.}
+    {\small El análisis exploratorio reveló que \textbf{menos de la mitad} de los tickets \textbf{traían solución} escrita.}
 \end{frame}
 \note{
 IDEA CENTRAL: Esta imagen ES el argumento. El momento de la confirmación.
@@ -338,6 +400,55 @@ categoría. Dos ejemplos caen claro; el tercero (instalar un visor de AutoCAD) c
 cómputo o en seguridad. Así el público entiende qué es clasificar y por qué es difícil,
 antes de ver los F1. El detalle (con la etiqueta real) está en el apéndice.}
 
+% --- Lámina nueva: del texto a la categoría (cómo se entrena el clasificador) ---
+\begin{frame}{Del texto a la categoría}
+\vfill
+\begin{center}
+\resizebox{\textwidth}{!}{%
+\begin{tikzpicture}[
+    font=\sffamily\small,
+    >={Stealth[length=2.5mm]},
+    paso/.style={
+        draw=structure.fg, rounded corners=3pt, align=center,
+        minimum height=2.4cm, minimum width=3.0cm, inner sep=6pt,
+        fill=structure.fg!8, very thick, text=black
+    },
+    final/.style={
+        draw=structure.fg, rounded corners=3pt, align=center,
+        minimum height=2.4cm, minimum width=3.0cm, inner sep=6pt,
+        fill=structure.fg, text=white, very thick
+    },
+    flecha/.style={->, very thick, draw=structure.fg},
+    etiqueta/.style={font=\sffamily\scriptsize\itshape, text=gray}
+]
+
+\node[paso] (texto)
+    {\textcolor{structure.fg}{\Large\faAlignLeft}\\[5pt]\textbf{Texto}\\\scriptsize «instalar visor .dwg»};
+\node[paso, right=3.0cm of texto] (vector)
+    {\textcolor{structure.fg}{\Large\faHashtag}\\[5pt]\textbf{Vector}\\\scriptsize $(0.21,\,-0.74,\,0.08,\dots)$};
+\node[final, right=3.0cm of vector] (cat)
+    {{\Large\faTags}\\[5pt]\textbf{Categoría}\\\scriptsize Cómputo y periféricos};
+
+\draw[flecha] (texto)  -- node[etiqueta, above, align=center]{modelo de\\embedding}      (vector);
+\draw[flecha] (vector) -- node[etiqueta, above, align=center]{modelo de\\clasificación}  (cat);
+
+\end{tikzpicture}%
+}
+\end{center}
+
+\vspace{1.5em}
+{\small El \textbf{modelo de embedding} traduce el texto a números (un \textbf{vector}) que
+capturan su \textbf{significado}; con esos números, un \textbf{modelo de clasificación}
+aprende a asignar la \textbf{categoría}.}
+\vfill
+\end{frame}
+\note{
+Puente entre el gancho conceptual y los resultados: explica en tres pasos cómo se
+entrena un clasificador de texto. La computadora no entiende palabras, sino números;
+el embedding convierte el texto en un vector que conserva el significado, y sobre esos
+vectores se entrena el modelo que elige la categoría.
+}
+
 \begin{frame}{Modelos de clasificación}
     Entrenamos varios modelos para clasificar los tickets a partir de su texto.
     \begin{figure}
@@ -381,21 +492,49 @@ cabeza en alto. Esta es la pata que "se cayó" del Acto 1, ahora explicada.
 %  ACTO 4 — LA SOLUCIÓN: EL ASISTENTE QUE LEE POR TI
 % =====================================================================
 
-% --- Lámina 12: ¿Qué construimos? (en humano) ---
+% --- Lámina 12: ¿Qué construimos? (en humano, conceptual) ---
 \begin{frame}{\textquestiondown Qué construimos?}
-    \begin{center}
-        \large
-        Imaginen un asistente al que le entregamos \textbf{todos los manuales}
-        del CENACE.
+\vfill
+\begin{center}
+\resizebox{\textwidth}{!}{%
+\begin{tikzpicture}[
+    font=\sffamily\small,
+    >={Stealth[length=2.5mm]},
+    paso/.style={
+        draw=structure.fg, rounded corners=3pt, align=center,
+        minimum height=2.3cm, minimum width=2.7cm, inner sep=6pt,
+        fill=structure.fg!8, very thick, text=black
+    },
+    final/.style={
+        draw=structure.fg, rounded corners=3pt, align=center,
+        minimum height=2.3cm, minimum width=2.9cm, inner sep=6pt,
+        fill=structure.fg, text=white, very thick
+    },
+    flecha/.style={->, very thick, draw=structure.fg},
+    etiqueta/.style={font=\sffamily\scriptsize\itshape, text=gray}
+]
 
-        \bigskip
-        No los memoriza: \textbf{sabe dónde encontrarlos}.
+\node[paso] (ing)
+    {\textcolor{structure.fg}{\Large\faUser}\\[5pt]\textbf{Ingeniero}\\\scriptsize pregunta en sus palabras};
+\node[paso, right=3.3cm of ing] (asis)
+    {\textcolor{structure.fg}{\Large\faRobot}\\[5pt]\textbf{Asistente}\\\scriptsize no memoriza:\\sabe dónde buscar};
+\node[final, right=3.3cm of asis] (resp)
+    {{\Large\faCommentDots}\\[5pt]\textbf{Respuesta}\\\scriptsize con la fuente citada};
+\node[paso, above=1.7cm of asis] (man)
+    {\textcolor{structure.fg}{\Large\faBookOpen}\\[5pt]\textbf{Documentos}\\\scriptsize del CENACE};
 
-        \bigskip
-        Cuando un ingeniero pregunta algo, el asistente busca la información más relevante,
-        arma una respuesta basada \textbf{solo con esa información}, y dice
-        \textbf{de qué documento la sacó}.
-    \end{center}
+\draw[flecha] (ing)  -- node[etiqueta, above]{pregunta}  (asis);
+\draw[flecha] (man)  -- node[etiqueta, right]{consulta}  (asis);
+\draw[flecha] (asis) -- node[etiqueta, above]{responde}  (resp);
+
+\end{tikzpicture}%
+}
+\end{center}
+
+\vspace{1.3em}
+{\small Arma la respuesta \textbf{solo con la información de los manuales} y \textbf{dice de
+qué documento la sacó}: eso separa \emph{responder} de \emph{inventar}.}
+\vfill
 \end{frame}
 \note{
 IDEA CENTRAL: Explicar el RAG en lenguaje humano ANTES del diagrama.
@@ -465,8 +604,16 @@ INVENTAR. Es la base de la confianza en un entorno técnico.
 \draw[flecha] (db2) -- node[etiqueta, above, align=center]{lo más\\parecido} (rel);
 \draw[flecha] (rel.south) -- (mll.north);
 \draw[flecha] (mll) -- node[etiqueta, above]{redacta} (resp);
-\draw[flecha] (preg.south) |- ([yshift=-0.86cm]preg.south) -| (mll.north)
+\draw[flecha] (preg.south) |- ([yshift=-0.88cm]preg.south) -| (mll.north)
       node[etiqueta, pos=0.25, above, align=center]{la pregunta también\\se entrega al modelo};
+
+% Retroalimentación: si la respuesta es útil, se guarda en la base de datos
+\draw[flecha, draw=structure.fg, dashed, line width=0.9pt]
+      (resp.east) to[out=25, in=-75]
+      node[etiqueta, pos=0.62, anchor=west, fill=white, inner sep=1.5pt,
+           align=center, text=structure.fg]
+          {si es \textbf{útil} (\faThumbsUp),\\se guarda}
+      (db2.south east);
 
 \begin{scope}[on background layer]
     \node[draw=structure.fg!40, rounded corners=4pt, dashed, thick,
@@ -559,11 +706,14 @@ Si la audiencia se lleva UNA sola cosa, que sea esta.
 }
 
 % --- Lámina 15: El prototipo, funcionando (capturas) ---
-\begin{frame}{Prototipo final}
-    \begin{figure}
-        \centering
-        \includegraphics[width=1.0\linewidth]{sesion_chat.png}
-    \end{figure}
+% Capturas apaisadas (2.03:1) escaladas por ANCHO y centradas verticalmente.
+% El borde lateral se controla con el "-8mm" (4mm por lado). El espacio
+% sobrante queda arriba/abajo; abajo aparecen la barra de navegación y el n/N.
+\begin{frame}[plain]
+    \centering
+    \vfill
+    \includegraphics[width=\dimexpr\paperwidth-8mm\relax]{sesion_chat.png}%
+    \vfill
 \end{frame}
 \note{
 IDEA CENTRAL: Mostrar lo TANGIBLE. A la audiencia le encanta ver la cosa
@@ -573,16 +723,15 @@ Pasar por las pestañas (Chat, Documentos, Soluciones, Tickets) con ritmo
 ágil para mostrar que existe y corre. Las siguientes láminas son esas
 pestañas. No detenerse demasiado en cada una.
 
-IMAGEN: sesion_chat.png (y las siguientes pestañas).
+IMAGEN: sesion\_chat.png (y las siguientes pestañas).
 [Contesta: QUÉ (la prueba palpable).]
 }
 
-% --- Láminas 15b-15e: recorrido de pestañas del prototipo (rápido) ---
-\begin{frame}{Prototipo final}
-    \begin{figure}
-        \centering
-        \includegraphics[width=1.0\linewidth]{sesion_documentos.png}
-    \end{figure}
+\begin{frame}[plain]
+    \centering
+    \vfill
+    \includegraphics[width=\dimexpr\paperwidth-8mm\relax]{sesion_documentos.png}%
+    \vfill
 \end{frame}
 \note{
 IDEA CENTRAL: Aquí el usuario CARGA documentos PDF a la base.
@@ -590,11 +739,11 @@ Pasar rápido. Mostrar que se puede nutrir el sistema con nueva
 documentación.
 }
 
-\begin{frame}{Prototipo final}
-    \begin{figure}
-        \centering
-        \includegraphics[width=1.0\linewidth]{sesion_soluciones.png}
-    \end{figure}
+\begin{frame}[plain]
+    \centering
+    \vfill
+    \includegraphics[width=\dimexpr\paperwidth-8mm\relax]{sesion_soluciones.png}%
+    \vfill
 \end{frame}
 \note{
 IDEA CENTRAL: Esta pestaña es la ANTESALA del clímax.
@@ -603,11 +752,11 @@ Sembrar: "fíjense que cada solución guarda de dónde salió". Esto conecta
 directo con la lámina del ciclo. Pasar con intención, no de prisa.
 }
 
-\begin{frame}{Prototipo final}
-    \begin{figure}
-        \centering
-        \includegraphics[width=1.0\linewidth]{sesion_tickets.png}
-    \end{figure}
+\begin{frame}[plain]
+    \centering
+    \vfill
+    \includegraphics[width=\dimexpr\paperwidth-8mm\relax]{sesion_tickets.png}%
+    \vfill
 \end{frame}
 \note{
 IDEA CENTRAL: Los tickets se pueden mandar a una conversación con el
