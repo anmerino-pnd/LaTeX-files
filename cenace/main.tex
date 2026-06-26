@@ -75,7 +75,7 @@
 % --- Lámina 1: Portada (sin numeración) ---
 {
 \setbeamertemplate{navigation symbols}{}
-\begin{frame}[plain]
+\begin{frame}
     \titlepage
 \end{frame}
 }
@@ -545,7 +545,7 @@ INVENTAR. Es la base de la confianza en un entorno técnico.
 [Contesta: QUÉ (en lenguaje humano).]
 }
 
-\begin{frame}{Cómo funciona por dentro}
+\begin{frame}{\textquestiondown Cómo funciona por dentro?}
 \begin{center}
 \resizebox{\textwidth}{!}{%
 \begin{tikzpicture}[
@@ -573,7 +573,7 @@ INVENTAR. Es la base de la confianza en un entorno técnico.
 % ---------- PARTE 1 — INGESTA ----------
 \node[caja] (docs)   {Documentos\\\scriptsize(Manuales, guías, normas...)};
 \node[caja, right=1.8cm of docs] (frag) {Fragmentos\\de texto};
-\node[clave, right=1.8cm of frag] (num1) {Se vuelven\\vectores};
+\node[clave, right=1.8cm of frag] (num1) {Se vuelven\\vectores\\{\scriptsize\itshape\textcolor{gray}{bge-m3}}};
 \node[draw=structure.fg, cylinder, shape border rotate=90, aspect=0.3,
       fill=structure.fg!10, very thick, minimum height=1.4cm, minimum width=2.2cm,
       align=center, right=1.8cm of num1] (db1) {Base de\\datos};
@@ -591,12 +591,12 @@ INVENTAR. Es la base de la confianza en un entorno técnico.
 
 % ---------- PARTE 2 — CONSULTA ----------
 \node[caja, below=3.0cm of docs] (preg) {Pregunta\\del usuario};
-\node[clave, right=1.8cm of preg] (num2) {Se vuelve\\vector};
+\node[clave, right=1.8cm of preg] (num2) {Se vuelve\\vector\\{\scriptsize\itshape\textcolor{gray}{bge-m3}}};
 \node[draw=structure.fg, cylinder, shape border rotate=90, aspect=0.3,
       fill=structure.fg!10, very thick, minimum height=1.4cm, minimum width=2.2cm,
       align=center, right=1.8cm of num2] (db2) {Base de\\datos};
 \node[clave, right=1.8cm of db2] (rel) {Fragmentos\\relevantes};
-\node[caja, below=1.4cm of rel] (mll) {Modelo de\\lenguaje};
+\node[caja, below=1.4cm of rel] (mll) {Modelo de\\lenguaje\\{\scriptsize\itshape\textcolor{gray}{gemma3:4b}}};
 \node[final, below=1.4cm of num2] (resp) {Respuesta};
 
 \draw[flecha] (preg) -- (num2);
@@ -604,7 +604,7 @@ INVENTAR. Es la base de la confianza en un entorno técnico.
 \draw[flecha] (db2) -- node[etiqueta, above, align=center]{lo más\\parecido} (rel);
 \draw[flecha] (rel.south) -- (mll.north);
 \draw[flecha] (mll) -- node[etiqueta, above]{redacta} (resp);
-\draw[flecha] (preg.south) |- ([yshift=-0.88cm]preg.south) -| (mll.north)
+\draw[flecha] (preg.south) |- ([yshift=-1cm]preg.south) -| (mll.north)
       node[etiqueta, pos=0.25, above, align=center]{la pregunta también\\se entrega al modelo};
 
 % Retroalimentación: si la respuesta es útil, se guarda en la base de datos
@@ -637,7 +637,7 @@ INVENTAR. Es la base de la confianza en un entorno técnico.
 
 
 % --- Lámina 14: El camino no fue recto (tropiezos técnicos condensados) ---
-\begin{frame}
+\begin{frame}{Dificultades}
 Probamos varias herramientas y modelos. Algunas simplemente
 \textbf{no funcionaron como esperábamos}.
 
